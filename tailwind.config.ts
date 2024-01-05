@@ -10,7 +10,12 @@ const config: Config = {
     extend: {
       backgroundImage: {
         banner:'url(/images/banner.webp)',
+        contactBg:'url(/images/contactImage.webp)',
       },
+      backgroundColor: {
+        overlay:'rgba(0,0,0,0.6)',
+        chatBg:'#EEEEEE'
+      }
     },
   },
   plugins: [],
