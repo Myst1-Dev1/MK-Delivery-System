@@ -6,7 +6,7 @@ export default function Orders() {
     return (
         <div className="py-10 mb-28 container m-auto">
             <h2 className="font-bold text-2xl text-center">Histórico de pedidos</h2>
-            <div className="mt-10 grid place-items-center lg:grid-cols-4 sm: grid-cols-1 gap-5">
+            <div className="mt-10 grid place-items-center xl:grid-cols-4 lg:grid-cols-3 sm: grid-cols-1 gap-5">
                 <div>
                     <h6>Sabado, 14 de Maio de 2023</h6>
                     <div className="flex flex-col mt-3 border border-gray-300 rounded-lg w-72">

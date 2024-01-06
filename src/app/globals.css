@@ -2,6 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+    background-color: #f8f8f8;
+}
+
 .no-scrollbar::-webkit-scrollbar {
     display: none;
+}
+
+.cartContainer::-webkit-scrollbar {
+    width: 5px; /* Largura da barra de rolagem */
+    background-color: #EEEEEE; /* Cor de fundo da barra de rolagem */
+}
+
+.cartContainer::-webkit-scrollbar-thumb {
+    background-color: red; /* Cor do indicador da barra de rolagem */
+    border-radius: 4px; /* Raio de borda do indicador */
 }

@@ -11,11 +11,11 @@ export function Cart({ onSetCart }:CartProps) {
         <div className="bg-overlay w-full h-screen fixed top-0 left-0 z-10">
             <div className="bg-white h-screen w-[390px] absolute right-0 top-0 flex flex-col justify-between">
                 <div className="py-3 px-3">
-                    <div>
+                    <div className="lg:mb-3 sm: mb-0">
                         <h2 className="text-2xl font-bold">Meus Pedidos</h2>
                         <FaTimes onClick = {() => onSetCart(false)} className="cursor-pointer absolute right-4 top-4" />
                     </div>
-                    <div className="overflow-y-scroll h-[350px] no-scrollbar">
+                    <div className="px-3 rounded overflow-y-scroll cartContainer 2xl:h-[390px] xl: h[410px] lg:h-[300px] md:h-[410px] sm: h-[500px]">
                         <div className="flex justify-between mt-10">
                             <div className="flex gap-3">
                                 <Image className="w-[100px] h-[100px] object-cover" src = "/images/sushi.webp" width={100} height={100} alt = "imagem do produto presente no carrinho" />

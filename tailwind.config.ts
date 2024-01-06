@@ -15,6 +15,9 @@ const config: Config = {
       backgroundColor: {
         overlay:'rgba(0,0,0,0.6)',
         chatBg:'#EEEEEE'
+      },
+      strokeWidth: {
+        '2': '20px',
       }
     },
   },

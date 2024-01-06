@@ -4,7 +4,7 @@ export default function OrderPage() {
     return (
         <div className="py-10 container m-auto">
             <h2 className="text-center text-2xl font-bold">Seu pedido</h2>
-            <div className="flex gap-10 flex-col m-auto mt-10 mb-20 lg:max-w-96 sm: max-w-80">
+            <div className="flex gap-10 flex-col m-auto mt-10 mb-20 lg:max-w-[768px] sm: max-w-80">
                 <div>
                     <h5 className="text-xl font-bold">Endereço</h5>
                     <h6>Rua Lorem Ipsum 14</h6>

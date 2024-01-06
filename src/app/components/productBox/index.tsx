@@ -25,8 +25,8 @@ export function ProductBox({ image, name, description, amount, price }:ProductBo
               </button>
             </div>
           </div>
-          <div className='absolute top-2 right-2 flex justify-center align-center bg-white w-10 h-10 rounded-full cursor-pointer hover:bg-red-600 transition-color'>
-            <FaHeart className="m-auto text-gray-400 hover:text-white transition-colors" />
+          <div className='absolute top-2 right-2 flex justify-center align-center text-gray-400 bg-white w-10 h-10 rounded-full cursor-pointer hover:bg-red-600 hover:text-white transition-color'>
+            <FaHeart className="m-auto transition-colors" />
           </div>
         </div>
     )

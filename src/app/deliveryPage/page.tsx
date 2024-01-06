@@ -10,7 +10,7 @@ export default function DeliveryPage() {
 
     return (
         <>
-            <div className="px-3 py-10 container m-auto mb-20 grid place-items-center lg:grid-cols-2 sm: grid-cols-1 gap-10">
+            <div className="h-[calc(100vh - 110px)] px-3 py-10 container m-auto grid place-items-center lg:grid-cols-2 sm: grid-cols-1 gap-10">
                 <div className="flex flex-col gap-5 lg:max-w-96 sm: max-w-80">
                     <h5 className="text-xl font-bold">Tempo de entrega: 18:00 - 18:45</h5>
                     <div className="flex gap-5">
@@ -41,7 +41,7 @@ export default function DeliveryPage() {
                 </div>
                 <Image src="/images/deliveryImage.webp" width={400} height={400} alt="imagem da página de entrega" />
             </div>
-            {chat &&<Chat  onSetChat={setChat} />}
+            {chat && <Chat  onSetChat={setChat} />}
         </>
     )
 }
