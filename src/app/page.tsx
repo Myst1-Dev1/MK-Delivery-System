@@ -5,8 +5,8 @@ import { ProductBox } from './components/productBox'
 
 export default function Home() {
   return (
-    <div className='mt-16 container px-3 m-auto'>
-      <div className='bg-banner bg-no-repeat min-h-72 w-full lg:bg-cover'></div>
+    <div className='mt-8 container px-3 m-auto'>
+      <div className='bg-banner bg-no-repeat rounded-lg w-full lg:min-h-96 bg-contain sm: min-h-28'></div>
       <div className='flex gap-8 mt-10 sm: flex-wrap'>
         <div className='flex gap-5 items-center bg-white border border-gray-400 rounded-lg p-2 h-14 lg:w-60 sm: w-full'>
           <FaSearch className="text-gray-400" />

@@ -1,6 +1,7 @@
 'use client'
 
 import Link from "next/link";
+import Image from "next/image";
 
 import { useContext, useEffect } from 'react';
 import { NavBar } from "../NavBar";
@@ -11,7 +12,6 @@ import { UserContext } from "../../../app/services/hooks/useUser/useUser";
 import { FaBell, FaShoppingCart, FaSignOutAlt } from "react-icons/fa";
 import { destroyCookie } from "nookies";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 
 export function Header() {
     const { isAuthenticated } = useContext(AuthContext);
@@ -36,8 +36,9 @@ export function Header() {
 
     return (
         <>
-            <div className="container m-auto mt-3 flex justify-between items-center sm: px-3">
-                <h1 className="font-bold lg:text-3xl sm:text-xl">M&K Delivery</h1>
+            <div className="container m-auto flex mt-3 justify-between items-center sm: px-3">
+                {/* <h1 className="font-bold lg:text-3xl sm:text-xl">M&K Delivery</h1> */}
+                <img className="object-cover lg:w-52 sm: w-28" src="/images/logo.webp" alt="imagem da logo" />
                 {isAuthenticated ? 
                     <div>
                         {data?.map(user => (
