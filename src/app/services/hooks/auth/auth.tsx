@@ -1,8 +1,9 @@
 'use client'
 
-import { ReactNode, createContext, useContext } from "react";
+import { ReactNode, createContext, useContext, useState } from "react";
 import { setCookie, parseCookies } from 'nookies';
 import { login, tokenVerify } from "../../axios";
+import { useRouter } from "next/navigation";
 
 type AuthProviderProps = {
     children:ReactNode | any
@@ -16,11 +17,16 @@ type SignInData = {
 type AuthContextData = {
     isAuthenticated: boolean,
     signIn:(data: SignInData) => Promise<void>;
+    isError:string;
 }
 
 export const AuthContext = createContext({} as AuthContextData);
 
 export function AuthProvider({ children }:AuthProviderProps) {
+    const [isError, setIsError] = useState('');
+
+    const router = useRouter();
+
     const { 'mk-delivery.token': tokenExists } = parseCookies();
 
     const isAuthenticated = !!tokenExists;
@@ -39,26 +45,28 @@ export function AuthProvider({ children }:AuthProviderProps) {
     async function signIn({ email, password }: SignInData) {
         try {
             const res = await login(email, password);
+    
+            if (res.status === 201) {
+                const tokenGenerated = `${res.headers['auth-token']}`;
+                setCookie(undefined, 'mk-delivery.token', tokenGenerated, {
+                    maxAge: 60 * 60 * 2 // 2 hours
+                });
+    
+                await validateToken();
+                console.log('Login bem-sucedido:', res.data);
 
-        if(res.status === 201) {
-            const tokenGenerated = `${res.headers['auth-token']}`;
-            setCookie(undefined, 'mk-delivery.token', tokenGenerated, {
-                maxAge: 60 * 60 * 2 // 2 hours
-            });
-            
-            await validateToken();
-            console.log(res.data);
-        }
-         else {
-            console.log('Erro no login');
-        }
-        } catch (error) {
-            console.log(error);
+                router.push('/');
+            } else {
+                console.log('Erro no login:', res.data);
+            }
+        } catch (error:any) {
+            console.error('Erro durante o login:', error);
+            setIsError(error.response.data);
         }
     }
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated, signIn }}>
+        <AuthContext.Provider value={{ isAuthenticated, signIn, isError }}>
             {children}
         </AuthContext.Provider>
     )

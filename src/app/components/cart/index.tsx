@@ -1,4 +1,6 @@
 import Image from "next/image";
+import Link from "next/link";
+
 import { Dispatch, SetStateAction } from "react";
 import { FaTimes, FaTrashAlt } from "react-icons/fa";
 
@@ -99,8 +101,8 @@ export function Cart({ onSetCart }:CartProps) {
                         <h6>Total(BRL)</h6>
                         <h6 className="text-red-600">R$:52,00<span className="text-gray-400">(R$:5,00)</span></h6>
                     </div>
-                    <button className="mt-4 rounded-lg border border-gray-300 p-3 w-full h-14 text-black hover:bg-red-600 transition-colors">Continuar comprando</button>
-                    <button className="mt-4 rounded-lg bg-red-500 text-white p-3 w-full h-14 hover:bg-red-600 transition-colors">Seguir para pagamento</button>
+                    <Link onClick={() => onSetCart(false)} href="/"><button className="mt-4 rounded-lg border border-gray-300 p-3 w-full h-14 text-black hover:bg-red-600 transition-colors">Continuar comprando</button></Link>
+                    <Link onClick={() => onSetCart(false)} href="/orderPage"><button className="mt-4 rounded-lg bg-red-500 text-white p-3 w-full h-14 hover:bg-red-600 transition-colors">Seguir para pagamento</button></Link>
                 </div>
         </div>
         </div>

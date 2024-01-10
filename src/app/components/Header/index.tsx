@@ -37,7 +37,6 @@ export function Header() {
     return (
         <>
             <div className="container m-auto flex mt-3 justify-between items-center sm: px-3">
-                {/* <h1 className="font-bold lg:text-3xl sm:text-xl">M&K Delivery</h1> */}
                 <img className="object-cover lg:w-52 sm: w-28" src="/images/logo.webp" alt="imagem da logo" />
                 {isAuthenticated ? 
                     <div>
@@ -45,7 +44,7 @@ export function Header() {
                             <div key={user.data._id} className="flex gap-5 items-center">
                                 <FaShoppingCart onClick={() => setCart(true)} className="fill-none stroke-2 stroke-black text-2xl cursor-pointer hover:fill-red-500 hover:stroke-none transition-colors" />
                                 <FaBell className="fill-none stroke-2 stroke-black text-2xl cursor-pointer hover:fill-red-500 hover:stroke-none transition-colors" />
-                                <Image className="rounded-full" src={user.data.image} width={50} height={50} alt="foto do usuário"/>
+                                <Image className="rounded-full object-cover w-[50px] h-[50px]" src={user.data.image} width={50} height={50} alt="foto do usuário"/>
                                 <FaSignOutAlt onClick={handleLogout} className="fill-none stroke-2 stroke-black text-2xl cursor-pointer hover:fill-red-500 hover:stroke-none transition-colors" />
                             </div>
                         ))}

@@ -19,3 +19,7 @@ body {
     background-color: red; /* Cor do indicador da barra de rolagem */
     border-radius: 4px; /* Raio de borda do indicador */
 }
+
+.modalTransform {
+    transform: translate(-50%, -50%);
+}
