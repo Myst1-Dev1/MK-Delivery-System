@@ -22,8 +22,6 @@ export function Header() {
     const [cart, setCart] = useState(false);
     const [isClient, setIsClient] = useState(false);
 
-    console.log(data);
-
     function handleLogout() {
         destroyCookie(null,'mk-delivery.token');
         router.push('/signInPage');
@@ -40,14 +38,12 @@ export function Header() {
                 <img className="object-cover lg:w-52 sm: w-28" src="/images/logo.webp" alt="imagem da logo" />
                 {isAuthenticated ? 
                     <div>
-                        {data?.map(user => (
-                            <div key={user.data._id} className="flex gap-5 items-center">
-                                <FaShoppingCart onClick={() => setCart(true)} className="fill-none stroke-2 stroke-black text-2xl cursor-pointer hover:fill-red-500 hover:stroke-none transition-colors" />
-                                <FaBell className="fill-none stroke-2 stroke-black text-2xl cursor-pointer hover:fill-red-500 hover:stroke-none transition-colors" />
-                                <Image className="rounded-full object-cover w-[50px] h-[50px]" src={user.data.image} width={50} height={50} alt="foto do usuário"/>
-                                <FaSignOutAlt onClick={handleLogout} className="fill-none stroke-2 stroke-black text-2xl cursor-pointer hover:fill-red-500 hover:stroke-none transition-colors" />
-                            </div>
-                        ))}
+                        <div key={data?.id} className="flex gap-5 items-center">
+                        <FaShoppingCart onClick={() => setCart(true)} className="fill-none stroke-2 stroke-black text-2xl cursor-pointer hover:fill-red-500 hover:stroke-none transition-colors" />
+                        <FaBell className="fill-none stroke-2 stroke-black text-2xl cursor-pointer hover:fill-red-500 hover:stroke-none transition-colors" />
+                        <img className="rounded-full object-cover w-[50px] h-[50px]" src={`https://api.digitallabor.com.br/${data?.avatar}`} width={50} height={50} alt="foto do usuário"/>
+                        <FaSignOutAlt onClick={handleLogout} className="fill-none stroke-2 stroke-black text-2xl cursor-pointer hover:fill-red-500 hover:stroke-none transition-colors" />
+                        </div>
                     </div>
                 :
                 <div>

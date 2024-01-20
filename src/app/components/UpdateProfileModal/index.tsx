@@ -4,6 +4,9 @@ import { api } from "../../../app/services/axios";
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "../../../app/services/queryClient";
 import { useForm } from "react-hook-form";
+import Image from "next/image";
+import { useState } from "react";
+import { Modal } from "../Modal";
 
 interface UpdateProfileModalProps {
     isOpen:boolean;
@@ -12,34 +15,12 @@ interface UpdateProfileModalProps {
 }
 
 export function UpdateProfileModal({ isOpen , onRequestClose, userId}: UpdateProfileModalProps) {
-    const { register, handleSubmit, formState:{errors}, setValue } = useForm();
+    const { register, handleSubmit, formState:{errors}, setValue, watch  } = useForm();
 
-//    async function updateUserData(formData: FormData) {
-//     try {
-//         const {'mk-delivery.token': token} = parseCookies();
+    const [image, setImage] = useState<null | any>(null);
+    const [isError , setIsError] = useState(false)
 
-//         const userUpdated = {
-//             firstname: formData.get('firstname'),
-//             lastname: formData.get('lastname'),
-//             password: formData.get('password'),
-//             tel: formData.get('tel'),
-//             image: formData.get('image'),
-//         };
-
-//         await api.put(`user/profile/${userId}`, userUpdated, {
-//             headers: {
-//                 'auth-token': token,
-//             },
-//         });
-
-//         console.log(userUpdated);
-
-//         console.log('deu certo');
-
-//     } catch (error) {
-//         console.error('Erro ao atualizar dados do usuário:', error);
-//     }
-//    }
+    const passwordConfirmation = watch('passwordConfirmation', '');
 
     async function updateUserData(data:any) {
         try {
@@ -53,6 +34,11 @@ export function UpdateProfileModal({ isOpen , onRequestClose, userId}: UpdatePro
 
             if (data.image) {
                 formData.append('image', data.image);
+            }
+
+            if (data.password !== passwordConfirmation) {
+                setIsError(true);
+                return;
             }
 
             const userUpdated = formData;
@@ -82,34 +68,50 @@ export function UpdateProfileModal({ isOpen , onRequestClose, userId}: UpdatePro
     return (
         <>
         {isOpen &&
-            <div className="bg-overlay h-screen w-full fixed top-0 left-0 right-0 z-20">
-                <div className="bg-white rounded-lg p-6 absolute top-[50%] left-[50%] modalTransform lg:w-[500px] sm: w-80">
-                    <h2 className="text-xl font-bold text-center">Atualizar dados de usuário</h2>
-                    <FaTimes className="absolute top-4 right-4 cursor-pointer hover:text-red-500 transition-colors" onClick={onRequestClose} />
-                    <form onSubmit={handleSubmit(handleUpdateUserData)} className="grid gap-8 grid-cols-1 place-items-center mt-10">
-                        <div className="grid lg:grid-cols-2 gap-5 sm: grid-cols-1 w-full">
-                            <div>
-                                <input {...register('image', {required:false})}
-                                    onChange={(e) => {
-                                        const file = e.target.files?.[0];
-                                        setValue('image', file);
-                                    }} className="hidden" type="file" id="image" />
-                                <label className="cursor-pointer flex gap-5 items-center" htmlFor="image"><FaUpload /> <span>Enviar imagem</span></label>
-                            </div>
-                            <input {...register('firstname', {required:false})}   className="outline-none border border-gray-400 rounded-lg p-3 w-full h-14" type="text" placeholder="Primeiro nome" />
+            <Modal>
+                <h2 className="text-xl font-bold text-center">Atualizar dados de usuário</h2>
+                <FaTimes className="absolute top-6 right-4 cursor-pointer hover:text-red-500 transition-colors" onClick={onRequestClose} />
+                <form onSubmit={handleSubmit(handleUpdateUserData)} className="grid gap-8 grid-cols-1 place-items-center mt-5">
+                    <div className="grid lg:grid-cols-2 gap-5 sm: grid-cols-1 w-full">
+                        <div className="flex flex-col gap-5">
+                            <Image className="border border-gray-300 object-cover rounded-full h-20 lg:w-20 sm: w-16" width={50} height={50} src={image !== null ? image : '/images/userUploadImage.webp'} alt="imagem de upload" />
+                            <input {...register('image', {required:false})}
+                                onChange={(e) => {
+                                    const file:any = e.target.files?.[0];
+                                    setValue('image', file);
+                                    setImage(URL.createObjectURL(file))
+                                }} className="hidden" type="file" id="image" />
+                            <label className="cursor-pointer flex gap-5 items-center" htmlFor="image"><FaUpload /> <span>Enviar imagem</span></label>
                         </div>
-                        <div className="grid lg:grid-cols-2 gap-5 sm: grid-cols-1 w-full">
-                            <input {...register('lastname', {required:false})} className="outline-none border border-gray-400 rounded-lg p-3 w-full h-14" type="text" placeholder="Último nome" />
-                            <input {...register('tel', {required:false})} className="outline-none border border-gray-400 rounded-lg p-3 w-full h-14" type="tel" placeholder="Telefone" />   
+                        <div className="flex flex-col gap-3 w-full">
+                            <label htmlFor="firstname">Primeiro Nome</label>
+                            <input {...register('firstname', {required:false})}  className="outline-none border border-gray-400 rounded-lg p-3 w-full lg:h-14 sm: h-[50px]" type="text" placeholder="John" id="firstname" />
                         </div>
-                        <div className="grid lg:grid-cols-2 gap-5 sm: grid-cols-1 w-full">
-                            <input {...register('password', {required:false})}   className="outline-none border border-gray-400 rounded-lg p-3 w-full h-14" type="password" placeholder="Senha" />
-                            {/* <input className="outline-none border border-gray-400 rounded-lg p-3 w-full h-14" type="password" placeholder="Confirme senha" /> */}
+                    </div>
+                    <div className="grid lg:grid-cols-2 gap-5 sm: grid-cols-1 w-full">
+                        <div className="flex flex-col gap-3 w-full">
+                            <label htmlFor="lastname">Último Nome</label>
+                            <input {...register('lastname', {required:false})} className="outline-none border border-gray-400 rounded-lg p-3 w-full lg:h-14 sm: h-[50px]" type="text" placeholder="Último nome" id="lastname" />
                         </div>
-                        <button type="submit" className="p-3 w-full rounded-lg text-xl h-14 bg-red-500 text-white hover:bg-red-600 transition-colors">Atualizar dados</button>
-                    </form>
-                </div>
-            </div>
+                        <div className="flex flex-col gap-3 w-full">
+                            <label htmlFor="tel">Telefone</label>
+                            <input {...register('tel', {required:false})} className="outline-none border border-gray-400 rounded-lg p-3 w-full lg:h-14 sm: h-[50px]" type="tel" placeholder="40028922" id="tel" />   
+                        </div>
+                    </div>
+                    <div className="grid lg:grid-cols-2 gap-5 sm: grid-cols-1 w-full">
+                        <div className="flex flex-col gap-3 w-full">
+                            <label htmlFor="password">Senha</label>
+                            <input {...register('password', {required:false})}   className="outline-none border border-gray-400 rounded-lg p-3 w-full lg:h-14 sm: h-[50px]" type="password" placeholder="******" id="password" />
+                        </div>
+                        <div className="flex flex-col gap-3 w-full">
+                            <label htmlFor="passwordConfirmation">Confirme a Senha</label>
+                            <input className="outline-none border border-gray-400 rounded-lg p-3 w-full lg:h-14 sm: h-[50px]" type="password" placeholder="Confirme senha" id="passwordConfirmation" />
+                        </div>
+                        {isError ? <span className="text-red-600 font-bold">As senhas não coincidem</span> : ''}
+                    </div>
+                    <button type="submit" className="p-3 w-full rounded-lg text-xl bg-red-500 text-white hover:bg-red-600 transition-colors lg:h-14 sm: h-[50px]">Atualizar dados</button>
+                </form>
+            </Modal>
             }
         </>        
     )

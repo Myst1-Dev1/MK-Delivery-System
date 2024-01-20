@@ -1,8 +1,7 @@
 export type SignUpData = {
-    firstname:string;
-    lastname:string;
+    name:string;
     email:string;
     tel:number;
     password:string;
-    isAdmin:boolean;
+    password_confirmation:string;
 }

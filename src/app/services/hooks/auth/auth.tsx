@@ -2,8 +2,8 @@
 
 import { ReactNode, createContext, useContext, useState } from "react";
 import { setCookie, parseCookies } from 'nookies';
-import { login, tokenVerify } from "../../axios";
 import { useRouter } from "next/navigation";
+import { login } from "../../axios";
 
 type AuthProviderProps = {
     children:ReactNode | any
@@ -25,48 +25,39 @@ export const AuthContext = createContext({} as AuthContextData);
 export function AuthProvider({ children }:AuthProviderProps) {
     const [isError, setIsError] = useState('');
 
+
     const router = useRouter();
 
     const { 'mk-delivery.token': tokenExists } = parseCookies();
 
     const isAuthenticated = !!tokenExists;
 
-    async function validateToken() {
-        if (tokenExists) {
-          const tk = { token: tokenExists };
-          const userData = await tokenVerify(tk);
-          if (userData.data !== undefined) {
-            console.log('Token gerado com sucesso')
-            return userData.data;
-          }
-        }
-    }
-    
+   
+
     async function signIn({ email, password }: SignInData) {
         try {
             const res = await login(email, password);
-    
-            if (res.status === 201) {
-                const tokenGenerated = `${res.headers['auth-token']}`;
-                setCookie(undefined, 'mk-delivery.token', tokenGenerated, {
+            
+            if (res.status === 200) {
+                const token = res.data.access_token
+
+                setCookie(undefined, 'mk-delivery.token', token, {
                     maxAge: 60 * 60 * 2 // 2 hours
-                });
-    
-                await validateToken();
-                console.log('Login bem-sucedido:', res.data);
+                })
 
                 router.push('/');
+
             } else {
                 console.log('Erro no login:', res.data);
             }
         } catch (error:any) {
             console.error('Erro durante o login:', error);
-            setIsError(error.response.data);
+            setIsError(error.response.data.message);
         }
     }
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated, signIn, isError }}>
+        <AuthContext.Provider value={{signIn, isAuthenticated, isError }}>
             {children}
         </AuthContext.Provider>
     )

@@ -9,7 +9,6 @@ import { UserContext } from "../services/hooks/useUser/useUser";
 import { UpdateProfileModal } from "../components/UpdateProfileModal";
 
 export default function Profile() {
-    const { data } = useContext(UserContext);
 
     const [profile, setProfile] = useState(true);
     const [favorites, setFavorites] = useState(false);
@@ -55,12 +54,12 @@ export default function Profile() {
 
     return (
         <>
-            <div className="container m-auto py-10 mb-10">
+            {/* <div className="container m-auto py-10 mb-10">
                 {data?.map(user => (
                     <div key={user.data._id} className="mt-10 container m-auto flex flex-wrap gap-10 lg:justify-start sm: justify-center">
                         <div className="border border-gray-300 h-[280px] rounded-lg divide-y divide-gray-300 lg:w-60 sm: w-[350px]">
                             <div className="flex items-center gap-3 p-3">
-                                <Image className="rounded-full bg-contain w-[50px] h-[50px]" src={user.data.image} width={50} height={50} alt="foto do usuário" />
+                                <Image className="rounded-full bg-cover w-[50px] h-[50px]" src={user.data.image} width={50} height={50} alt="foto do usuário" />
                                 <h2 className="font-bold lg:block text-2xl">{user.data.firstname}</h2>
                             </div>
                             <div className="mt-5 p-3 flex flex-col m-auto gap-5 lg:items-start justify-center">
@@ -95,19 +94,21 @@ export default function Profile() {
                             </div>}
 
                             {favorites &&<div>
-                                <div className='flex gap-2 items-center border border-gray-400 rounded-lg p-2 h-14 lg:w-60 sm: w-full'>
+                                <div className='bg-white flex gap-2 items-center border border-gray-400 rounded-lg p-2 h-14 lg:w-60 sm: w-full'>
                                     <FaSearch className="text-gray-400" />
-                                    <input className='outline-none bg-none w-40' type="text" placeholder='Pesquisar...' />
+                                    <input className='outline-none w-40' type="text" placeholder='Pesquisar...' />
                                 </div>
                                 <div className="mt-10 grid gap-10 lg:grid-cols-2 sm: grid-cols-1">
-                                <ProductBox 
+                                <ProductBox
+                                    id="1"
                                     image = '/images/sushi.webp'
                                     name = 'Takoyaki'
                                     description = 'Composto por: polvo, cebolinha, gengibre, alga, molho de soja.'
                                     amount = 'Porção com 8 unidades'
                                     price = 'R$:17,90'
                                 />
-                                <ProductBox 
+                                <ProductBox
+                                    id="2" 
                                     image = '/images/sushi.webp'
                                     name = 'Takoyaki'
                                     description = 'Composto por: polvo, cebolinha, gengibre, alga, molho de soja.'
@@ -146,7 +147,7 @@ export default function Profile() {
                         }
                     </div>
                 ))}
-            </div>
+            </div> */}
         </>
     )
 }
