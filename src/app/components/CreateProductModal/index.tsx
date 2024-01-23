@@ -37,8 +37,6 @@ export function CreateProductModal({ isOpen , onRequestClose}:CreateProductModal
         }
     }
 
-    console.log(image);
-
     return (
         <>
         {isOpen &&

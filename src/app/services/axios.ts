@@ -13,9 +13,9 @@ export async function login(email:string, password:string) {
     return res;
 }
 
-export async function getProductsData() {
+export async function getProductsData(pageNumber = 1) {
     try {
-        const { data, status } = await api.get('products');
+        const { data, status } = await api.get(`products?page=${pageNumber}`);
 
         if(status === 200) return data;
 

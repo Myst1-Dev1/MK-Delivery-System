@@ -21,8 +21,6 @@ export function ProductBox({ image, name, description, amount, price, id }:Produ
     const { data } = useContext(UserContext);
     const { DeleteProduct } = useContext(ProductContext);
 
-    console.log('eu sou a imagem aqui',image);
-
     const mutation:any = useMutation({
       mutationFn:DeleteProduct,
       onSuccess: () => {

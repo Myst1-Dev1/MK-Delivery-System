@@ -1,7 +1,7 @@
 'use client'
 
 import { useQuery } from '@tanstack/react-query';
-import { createContext, useContext, ReactNode } from 'react';
+import { createContext, useContext, ReactNode, useState } from 'react';
 import { api, getProductsData } from '../../axios';
 import { Products } from '../../../../app/types/Products';
 import { parseCookies } from 'nookies';
@@ -15,6 +15,7 @@ type ProductContextData = {
     isLoading:boolean;
     DeleteProduct:(id:string) => void | any;
     CreateProducts:(productsValue:Products) => void | any;
+    setPage:any;
 }
 
 export const ProductContext = createContext(
@@ -22,9 +23,12 @@ export const ProductContext = createContext(
 );
 
 export function ProductsProvider({ children }: ProductsProviderProps) {
+    const [page, setPage] = useState(1);
+
+    console.log(page);
 
     async function getProducts() {
-        const res = await getProductsData();
+        const res = await getProductsData(page);
         return res;
     }
 
@@ -75,14 +79,14 @@ export function ProductsProvider({ children }: ProductsProviderProps) {
     }
 
     const {data, isLoading} = useQuery({
-        queryKey:['products'],
+        queryKey:['products', page],
         queryFn:getProducts
     })
 
     const products = data;
 
      return (
-        <ProductContext.Provider value={{ products, isLoading, CreateProducts, DeleteProduct }}>
+        <ProductContext.Provider value={{ products, isLoading, setPage, CreateProducts, DeleteProduct }}>
             {children}
         </ProductContext.Provider>
      )
