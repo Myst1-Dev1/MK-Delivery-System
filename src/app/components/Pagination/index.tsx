@@ -2,10 +2,10 @@ import { ProductContext } from "../../../app/services/hooks/useProducts/useProdu
 import { useContext } from "react"
 
 export function Pagination() {
-    const { products, setPage } = useContext(ProductContext);
-
-    const currentPage = products?.current_page;
-    const lastPage = products?.last_page;
+  const { products, setPage, filter } = useContext(ProductContext);
+  
+  const currentPage = filter?.current_page || products?.current_page;
+  const lastPage = filter?.last_page || products?.last_page;
 
     function renderPageButtons() {
         if (!lastPage || lastPage === 1) {

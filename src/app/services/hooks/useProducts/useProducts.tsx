@@ -13,6 +13,8 @@ type ProductsProviderProps = {
 type ProductContextData = {
     products: any;
     isLoading:boolean;
+    filter:any;
+    setFilter:any;
     DeleteProduct:(id:string) => void | any;
     CreateProducts:(productsValue:Products) => void | any;
     setPage:any;
@@ -24,11 +26,13 @@ export const ProductContext = createContext(
 
 export function ProductsProvider({ children }: ProductsProviderProps) {
     const [page, setPage] = useState(1);
-
-    console.log(page);
+    const [filter, setFilter] = useState<[] | any>([]);
 
     async function getProducts() {
         const res = await getProductsData(page);
+        if (!filter.length) {
+            setFilter(res.data);
+        }
         return res;
     }
 
@@ -86,7 +90,7 @@ export function ProductsProvider({ children }: ProductsProviderProps) {
     const products = data;
 
      return (
-        <ProductContext.Provider value={{ products, isLoading, setPage, CreateProducts, DeleteProduct }}>
+        <ProductContext.Provider value={{ products, isLoading, filter, setFilter, setPage, CreateProducts, DeleteProduct }}>
             {children}
         </ProductContext.Provider>
      )

@@ -2,7 +2,7 @@
 
 import { FaSearch } from 'react-icons/fa'
 import { ProductBox } from './components/productBox'
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { ProductContext } from './services/hooks/useProducts/useProducts'
 import { formatPrice } from './utils/formatPrice'
 import { CreateProductModal } from './components/CreateProductModal'
@@ -10,18 +10,50 @@ import { Pagination } from './components/Pagination'
 import { UserContext } from './services/hooks/useUser/useUser'
 
 export default function Home() {
-  const { products, isLoading } = useContext(ProductContext);
+  const { products, isLoading, filter, setFilter } = useContext(ProductContext);
   const { data } = useContext(UserContext);
+
+  const [search, setSearch] = useState('');
+  const [selectedType, setSelectedType] = useState('');
 
   const [isCreateProductModalOpen, setIsCreateProductModalOpen] = useState(false);
 
   function handleOpenCreateProductModal() {
     setIsCreateProductModalOpen(true);
-}
+  }
 
   function handleCloseCreateProductModal() {
     setIsCreateProductModalOpen(false);
   }
+
+  function searchProducts() {
+    if(search !== '') {
+        setFilter(products?.data.filter((e:any) => e.name.toLowerCase().includes(search.toLowerCase())));
+    } else {
+        setFilter(products?.data);
+    };
+};
+
+  function filterProductsByType() {
+    if(selectedType !== '') {
+      if(selectedType === 'Todos') {
+        setFilter(products?.data);
+      } else {
+        setFilter(products?.data.filter((e:any) => e.type === selectedType))
+      }
+    }
+    else {
+      setFilter(products?.data);
+    }
+  }
+
+  useEffect(() => {
+    searchProducts();
+  }, [search]);
+
+  useEffect(() => {
+    filterProductsByType();
+  }, [selectedType]);
 
   return (
     <div className='mt-8 container px-3 m-auto'>
@@ -35,9 +67,10 @@ export default function Home() {
         <div className='flex gap-8 lg:max-w-[600px] md: w-full sm: flex-wrap'>
           <div className='flex gap-5 items-center bg-white border border-gray-400 rounded-lg p-3 h-14 lg:w-[250px] sm: w-full'>
             <FaSearch className="text-gray-400" />
-            <input className='outline-none lg:w-40 sm: w-full' type="text" placeholder='Pesquisar...' />
+            <input value={search} onChange={e => setSearch(e.target.value)}  className='outline-none lg:w-40 sm: w-full' type="text" placeholder='Pesquisar...' />
           </div>
-          <select className='text-gray-400 outline-none border border-gray-400 rounded-lg p-3 h-14 lg:w-[250px] sm: w-full'>
+          <select onChange={e => setSelectedType(e.target.value)} value={selectedType} className='text-gray-400 outline-none border border-gray-400 rounded-lg p-3 h-14 lg:w-[250px] sm: w-full'>
+            <option value="Todos">Todos</option>
             <option value="Frango">Frango</option>
             <option value="Carne">Carne</option>
             <option value="Macarrão">Macarrão</option>
@@ -55,7 +88,7 @@ export default function Home() {
       <div className='mt-16 grid gap-10 place-items-center xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1'>
         {isLoading ? <div className="m-auto animate-spin rounded-full h-20 w-20 border-8 border-red-500 border-t-4 border-t-red-300"></div> 
           : products && products.data && products.data.length > 0 ? 
-            products.data?.map((product:any) => (
+            search === '' && selectedType === 'Todos' ? products.data?.map((product:any) => (
             <div key={product.id}>  
               <ProductBox
                 id={product.id}
@@ -66,7 +99,18 @@ export default function Home() {
                 price = {formatPrice(product.price)}
               />
             </div>
-          )) : 'sem produtos'}
+          )) : filter.map((product:any) => (
+            <div key={product.id}>  
+              <ProductBox
+                id={product.id}
+                image = {`https://api.digitallabor.com.br/${product.image}`}
+                name = {product.name}
+                description = {product.details}
+                amount = {product.amount}
+                price = {formatPrice(product.price)}
+              />
+            </div>
+          )) : 'sem produtos' }
         <CreateProductModal isOpen={isCreateProductModalOpen} onRequestClose={handleCloseCreateProductModal} /> 
       </div>
       
