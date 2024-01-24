@@ -15,7 +15,7 @@ import { useRouter } from "next/navigation";
 
 export function Header() {
     const { isAuthenticated } = useContext(AuthContext);
-    const { data } = useContext(UserContext);
+    const { user } = useContext(UserContext);
 
     const router = useRouter();
 
@@ -38,10 +38,10 @@ export function Header() {
                 <img className="object-cover lg:w-52 sm: w-28" src="/images/logo.webp" alt="imagem da logo" />
                 {isAuthenticated ? 
                     <div>
-                        <div key={data?.id} className="flex gap-5 items-center">
+                        <div key={user?.id} className="flex gap-5 items-center">
                         <FaShoppingCart onClick={() => setCart(true)} className="fill-none stroke-2 stroke-black text-2xl cursor-pointer hover:fill-red-500 hover:stroke-none transition-colors" />
                         <FaBell className="fill-none stroke-2 stroke-black text-2xl cursor-pointer hover:fill-red-500 hover:stroke-none transition-colors" />
-                        <img className="rounded-full object-cover w-[50px] h-[50px]" src={`https://api.digitallabor.com.br/${data?.avatar}`} width={50} height={50} alt="foto do usuário"/>
+                        <img className="rounded-full object-cover w-[50px] h-[50px]" src={`https://api.digitallabor.com.br/${user?.avatar}`} width={50} height={50} alt="foto do usuário"/>
                         <FaSignOutAlt onClick={handleLogout} className="fill-none stroke-2 stroke-black text-2xl cursor-pointer hover:fill-red-500 hover:stroke-none transition-colors" />
                         </div>
                     </div>

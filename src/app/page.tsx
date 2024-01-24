@@ -11,10 +11,10 @@ import { UserContext } from './services/hooks/useUser/useUser'
 
 export default function Home() {
   const { products, isLoading, filter, setFilter } = useContext(ProductContext);
-  const { data } = useContext(UserContext);
+  const { user } = useContext(UserContext);
 
   const [search, setSearch] = useState('');
-  const [selectedType, setSelectedType] = useState('');
+  const [selectedType, setSelectedType] = useState('Todos');
 
   const [isCreateProductModalOpen, setIsCreateProductModalOpen] = useState(false);
 
@@ -79,7 +79,7 @@ export default function Home() {
           </select>
         </div>
 
-        {data?.user_adm === 1 ? 
+        {user?.user_adm === 1 ? 
           <button onClick={handleOpenCreateProductModal} className="rounded-lg bg-red-500 text-white p-3 h-14 hover:bg-red-600 transition-colors lg:w-[250px] sm: w-full">Criar novo Produto</button> 
         : ''}
      
@@ -89,7 +89,7 @@ export default function Home() {
         {isLoading ? <div className="m-auto animate-spin rounded-full h-20 w-20 border-8 border-red-500 border-t-4 border-t-red-300"></div> 
           : products && products.data && products.data.length > 0 ? 
             search === '' && selectedType === 'Todos' ? products.data?.map((product:any) => (
-            <div key={product.id}>  
+            <div key={product.id}>
               <ProductBox
                 id={product.id}
                 image = {`https://api.digitallabor.com.br/${product.image}`}

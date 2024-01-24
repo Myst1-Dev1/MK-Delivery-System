@@ -1,7 +1,7 @@
 'use client'
 
 import { UserProfile } from '../../../../app/types/UserProfile';
-import { useContext, createContext, ReactNode, useState } from 'react';
+import { useContext, createContext, ReactNode } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '../../axios';
 import { parseCookies } from 'nookies';
@@ -11,7 +11,7 @@ type UserProviderProps = {
 }
 
 type UserContextData = {
-    data:UserProfile[] | any;
+    user:UserProfile[] | any;
     isLoading:boolean;
     token:any;
 }
@@ -21,7 +21,6 @@ export const UserContext = createContext(
 
 export function UserProvider({children}:UserProviderProps) {
     const {'mk-delivery.token': token} = parseCookies();
-    const [user, setUser] = useState<[] | any>([]);
 
     // async function getAllUser() {
     //     try {
@@ -56,14 +55,14 @@ export function UserProvider({children}:UserProviderProps) {
         }
     }
 
-    const { data, isLoading } = useQuery({
+    const { data:user, isLoading } = useQuery({
         queryKey:['user'],
         queryFn:getUserData
     })
 
 
     return (
-        <UserContext.Provider value={{ data, isLoading, token }}>
+        <UserContext.Provider value={{ user, isLoading, token }}>
             {children}
         </UserContext.Provider>
     )

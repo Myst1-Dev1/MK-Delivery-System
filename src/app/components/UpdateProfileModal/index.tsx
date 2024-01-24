@@ -15,39 +15,33 @@ interface UpdateProfileModalProps {
 }
 
 export function UpdateProfileModal({ isOpen , onRequestClose, userId}: UpdateProfileModalProps) {
-    const { register, handleSubmit, formState:{errors}, setValue, watch  } = useForm();
+    const { register, handleSubmit, setValue, reset } = useForm();
 
     const [image, setImage] = useState<null | any>(null);
-    const [isError , setIsError] = useState(false)
-
-    const passwordConfirmation = watch('passwordConfirmation', '');
 
     async function updateUserData(data:any) {
         try {
             const {'mk-delivery.token': token} = parseCookies();
             const formData = new FormData();
 
-            formData.append('firstname', data.firstname);
-            formData.append('lastname', data.lastname);
+            formData.append('avatar', data.avatar);
+            formData.append('name', data.name);
+            formData.append('email', data.email);
             formData.append('password', data.password);
+            formData.append('current_password', data.current_password);
+            formData.append('password_confirmation', data.password_confirmation);
             formData.append('tel', data.tel);
 
-            if (data.image) {
-                formData.append('image', data.image);
-            }
-
-            if (data.password !== passwordConfirmation) {
-                setIsError(true);
-                return;
-            }
-
-            const userUpdated = formData;
-
-            await api.put(`user/profile/${userId}`, userUpdated, {
+            const res = await api.put(`users/${userId}`, formData, {
                 headers: {
-                    'auth-token': token,
+                    'Accept': 'application/json',
+                    "Content-Type": 'multipart/form-data',
+                    Authorization: `Bearer ${token}`
                 },
             });
+
+            console.log('Dados de usuário atualizados com sucesso', res.data);
+            reset();
         } catch (error) {
             console.error('Erro ao atualizar dados do usuário:', error);
         }
@@ -75,40 +69,44 @@ export function UpdateProfileModal({ isOpen , onRequestClose, userId}: UpdatePro
                     <div className="grid lg:grid-cols-2 gap-5 sm: grid-cols-1 w-full">
                         <div className="flex flex-col gap-5">
                             <Image className="border border-gray-300 object-cover rounded-full h-20 lg:w-20 sm: w-16" width={50} height={50} src={image !== null ? image : '/images/userUploadImage.webp'} alt="imagem de upload" />
-                            <input {...register('image', {required:false})}
+                            <input {...register('avatar', {required:false})}
                                 onChange={(e) => {
                                     const file:any = e.target.files?.[0];
-                                    setValue('image', file);
+                                    setValue('avatar', file);
                                     setImage(URL.createObjectURL(file))
-                                }} className="hidden" type="file" id="image" />
-                            <label className="cursor-pointer flex gap-5 items-center" htmlFor="image"><FaUpload /> <span>Enviar imagem</span></label>
+                                }} className="hidden" type="file" id="avatar" />
+                            <label className="cursor-pointer flex gap-5 items-center" htmlFor="avatar"><FaUpload /> <span>Enviar imagem</span></label>
                         </div>
                         <div className="flex flex-col gap-3 w-full">
-                            <label htmlFor="firstname">Primeiro Nome</label>
-                            <input {...register('firstname', {required:false})}  className="outline-none border border-gray-400 rounded-lg p-3 w-full lg:h-14 sm: h-[50px]" type="text" placeholder="John" id="firstname" />
+                            <label htmlFor="name">Nome</label>
+                            <input {...register('name', {required:false})}  className="outline-none border border-gray-400 rounded-lg p-3 w-full lg:h-14 sm: h-[50px]" type="text" placeholder="John Doe" id="name" />
                         </div>
                     </div>
                     <div className="grid lg:grid-cols-2 gap-5 sm: grid-cols-1 w-full">
                         <div className="flex flex-col gap-3 w-full">
-                            <label htmlFor="lastname">Último Nome</label>
-                            <input {...register('lastname', {required:false})} className="outline-none border border-gray-400 rounded-lg p-3 w-full lg:h-14 sm: h-[50px]" type="text" placeholder="Último nome" id="lastname" />
+                            <label htmlFor="email">Email</label>
+                            <input {...register('email', {required:false})} className="outline-none border border-gray-400 rounded-lg p-3 w-full lg:h-14 sm: h-[50px]" type="text" placeholder="johndoe@gmail.com" id="email" />
                         </div>
                         <div className="flex flex-col gap-3 w-full">
                             <label htmlFor="tel">Telefone</label>
                             <input {...register('tel', {required:false})} className="outline-none border border-gray-400 rounded-lg p-3 w-full lg:h-14 sm: h-[50px]" type="tel" placeholder="40028922" id="tel" />   
                         </div>
                     </div>
+                    <div className="flex flex-col gap-3 w-full">
+                        <label htmlFor="current_password">Senha Atual</label>
+                        <input {...register('current_password', {required:false})} className="outline-none border border-gray-400 rounded-lg p-3 w-full lg:h-14 sm: h-[50px]" type="password" placeholder="******" id="password" />
+                    </div>
                     <div className="grid lg:grid-cols-2 gap-5 sm: grid-cols-1 w-full">
                         <div className="flex flex-col gap-3 w-full">
-                            <label htmlFor="password">Senha</label>
-                            <input {...register('password', {required:false})}   className="outline-none border border-gray-400 rounded-lg p-3 w-full lg:h-14 sm: h-[50px]" type="password" placeholder="******" id="password" />
+                            <label htmlFor="password">Nova Senha</label>
+                            <input {...register('password', {required:false})} className="outline-none border border-gray-400 rounded-lg p-3 w-full lg:h-14 sm: h-[50px]" type="password" placeholder="******" id="password" />
                         </div>
                         <div className="flex flex-col gap-3 w-full">
-                            <label htmlFor="passwordConfirmation">Confirme a Senha</label>
-                            <input className="outline-none border border-gray-400 rounded-lg p-3 w-full lg:h-14 sm: h-[50px]" type="password" placeholder="Confirme senha" id="passwordConfirmation" />
+                            <label htmlFor="password_confirmation">Confirme a Senha</label>
+                            <input {...register('password_confirmation', {required:false})} className="outline-none border border-gray-400 rounded-lg p-3 w-full lg:h-14 sm: h-[50px]" type="password" placeholder="Confirme senha" id="password_confirmation" />
                         </div>
-                        {isError ? <span className="text-red-600 font-bold">As senhas não coincidem</span> : ''}
                     </div>
+                    <div></div>
                     <button type="submit" className="p-3 w-full rounded-lg text-xl bg-red-500 text-white hover:bg-red-600 transition-colors lg:h-14 sm: h-[50px]">Atualizar dados</button>
                 </form>
             </Modal>

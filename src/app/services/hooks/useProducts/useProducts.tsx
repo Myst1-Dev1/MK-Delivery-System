@@ -82,12 +82,10 @@ export function ProductsProvider({ children }: ProductsProviderProps) {
         }
     }
 
-    const {data, isLoading} = useQuery({
+    const {data:products, isLoading} = useQuery({
         queryKey:['products', page],
         queryFn:getProducts
     })
-
-    const products = data;
 
      return (
         <ProductContext.Provider value={{ products, isLoading, filter, setFilter, setPage, CreateProducts, DeleteProduct }}>

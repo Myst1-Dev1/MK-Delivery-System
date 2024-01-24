@@ -5,13 +5,17 @@ import Link from "next/link"
 import { useContext } from 'react';
 import { useForm } from "react-hook-form";
 import { AuthContext } from "../services/hooks/auth/auth";
+import { useRouter } from "next/navigation";
 
 export default function SignInPage() {
     const { signIn, isError } = useContext(AuthContext);
     const { register, handleSubmit, formState:{errors} } = useForm();
 
+    const router = useRouter();
+
     async function handleLogin(data:any) {
         await signIn(data);
+        router.refresh();
     }
 
     return (

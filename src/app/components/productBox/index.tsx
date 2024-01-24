@@ -1,12 +1,13 @@
 'use client';
 
 import { UserContext } from "../../../app/services/hooks/useUser/useUser";
-import Image from "next/image";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { FaHeart, FaShoppingCart, FaTrashAlt } from "react-icons/fa";
 import { ProductContext } from "../../../app/services/hooks/useProducts/useProducts";
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "../../../app/services/queryClient";
+import { api } from "../../../app/services/axios";
+import { parseCookies } from "nookies";
 
 interface ProductBoxProps {
     id:string;
@@ -18,8 +19,44 @@ interface ProductBoxProps {
 }
 
 export function ProductBox({ image, name, description, amount, price, id }:ProductBoxProps) {
-    const { data } = useContext(UserContext);
+    const { user } = useContext(UserContext);
     const { DeleteProduct } = useContext(ProductContext);
+
+    const [favorites, setFavorites] = useState<[] | any>([]);
+
+    const userId = user?.id;
+    const {'mk-delivery.token': token} = parseCookies();
+
+    async function handleCreateFavorites() {
+      try {
+          // Verifica se o produto já está nos favoritos
+          const isProductInFavorites = favorites.includes(id);
+  
+          // Cria uma nova lista de favoritos com base na verificação acima
+          const updatedFavorites = isProductInFavorites
+              ? favorites.filter((favId:any) => favId !== id)
+              : [...favorites, id];
+  
+          // Atualiza o estado local dos favoritos
+          setFavorites(updatedFavorites);
+  
+          // Atualiza os favoritos no Laravel usando método PUT
+          await api.put(`users/${userId}`, {
+              favorites: JSON.stringify(updatedFavorites),
+          }, {
+            headers: {
+                'Accept': 'application/json',
+                "Content-Type": 'multipart/form-data',
+                Authorization: `Bearer ${token}`
+            }
+          });
+  
+          console.log('Favoritos atualizados:', updatedFavorites);
+      } catch (error) {
+          console.error('Erro ao atualizar favoritos:', error);
+      }
+  }
+  
 
     const mutation:any = useMutation({
       mutationFn:DeleteProduct,
@@ -36,7 +73,7 @@ export function ProductBox({ image, name, description, amount, price, id }:Produ
     return (
         <div className='relative lg:mb-0 sm: mb-10'>
           
-            {data?.user_adm === 1 ? 
+            {user?.user_adm === 1 ? 
               <div className="top-6 left-4 absolute"><FaTrashAlt onClick={() => handleDeleteProduct(id)} className="text-red-500 cursor-pointer" /></div>
             : ''}
 
@@ -56,7 +93,7 @@ export function ProductBox({ image, name, description, amount, price, id }:Produ
             </div>
           </div>
           <div className='absolute top-2 right-2 flex justify-center align-center text-gray-400 bg-white w-10 h-10 rounded-full cursor-pointer hover:bg-red-600 hover:text-white transition-color'>
-            <FaHeart className="m-auto transition-colors" />
+            <FaHeart onClick={handleCreateFavorites} className="m-auto transition-colors" />
           </div>
         </div>
     )

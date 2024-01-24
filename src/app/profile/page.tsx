@@ -4,11 +4,13 @@ import Image from "next/image";
 
 import { useState, useContext } from "react";
 import { FaHeart, FaPencilAlt, FaRocketchat, FaSearch, FaUser } from "react-icons/fa";
-import { ProductBox } from "../components/productBox";
 import { UserContext } from "../services/hooks/useUser/useUser";
 import { UpdateProfileModal } from "../components/UpdateProfileModal";
+import { AuthContext } from "../services/hooks/auth/auth";
 
 export default function Profile() {
+    const { user } = useContext(UserContext);
+    const { isAuthenticated } = useContext(AuthContext);
 
     const [profile, setProfile] = useState(true);
     const [favorites, setFavorites] = useState(false);
@@ -52,15 +54,17 @@ export default function Profile() {
         setIsNewProfileModalOpen(false);
     }
 
+    console.log(user);
+
     return (
         <>
-            {/* <div className="container m-auto py-10 mb-10">
-                {data?.map(user => (
-                    <div key={user.data._id} className="mt-10 container m-auto flex flex-wrap gap-10 lg:justify-start sm: justify-center">
+        {isAuthenticated === false ? <span className="container m-auto mt-10 text-center">Você precisa estár logado</span> :
+            <div className="container m-auto py-10 mb-10">
+                    <div key={user?._id} className="mt-10 container m-auto flex flex-wrap gap-10 lg:justify-start sm: justify-center">
                         <div className="border border-gray-300 h-[280px] rounded-lg divide-y divide-gray-300 lg:w-60 sm: w-[350px]">
                             <div className="flex items-center gap-3 p-3">
-                                <Image className="rounded-full bg-cover w-[50px] h-[50px]" src={user.data.image} width={50} height={50} alt="foto do usuário" />
-                                <h2 className="font-bold lg:block text-2xl">{user.data.firstname}</h2>
+                                <img className="rounded-full bg-cover w-[50px] h-[50px]" src={`https://api.digitallabor.com.br/${user?.avatar}`}width={50} height={50} alt="foto do usuário" />
+                                <h2 className="font-bold lg:block text-2xl">{user?.name}</h2>
                             </div>
                             <div className="mt-5 p-3 flex flex-col m-auto gap-5 lg:items-start justify-center">
                                 <div onClick={() => openProfileNavItem('profile')} className="flex items-center gap-3">
@@ -83,9 +87,9 @@ export default function Profile() {
                             {profile && <div>
                                 <h2 className="font-bold lg:text-3xl sm: text-xl">Informações do usuário</h2>
                                 <div className="mt-5 flex flex-col gap-3">
-                                    <h6 className="lg:text-sm sm: text-xs">Nome: {user.data.firstname} {user.data.lastname}</h6>
+                                    <h6 className="lg:text-sm sm: text-xs">Nome: {user?.name}</h6>
                                     <h6 className="lg:text-sm sm: text-xs">Endereço: Rua Lorem Ipsum</h6>
-                                    <h6 className="lg:text-sm sm: text-xs">Telefone: {user.data.tel}</h6>
+                                    <h6 className="lg:text-sm sm: text-xs">Telefone: {user?.tel}</h6>
                                     <button onClick={handleOpenProfileModal} className="mt-5 flex gap-3 justify-center items-center rounded-lg bg-red-500 p-3 w-40 h-14 text-white hover:bg-red-600 transition-colors">
                                         <FaPencilAlt />
                                         Editar Perfil
@@ -99,22 +103,7 @@ export default function Profile() {
                                     <input className='outline-none w-40' type="text" placeholder='Pesquisar...' />
                                 </div>
                                 <div className="mt-10 grid gap-10 lg:grid-cols-2 sm: grid-cols-1">
-                                <ProductBox
-                                    id="1"
-                                    image = '/images/sushi.webp'
-                                    name = 'Takoyaki'
-                                    description = 'Composto por: polvo, cebolinha, gengibre, alga, molho de soja.'
-                                    amount = 'Porção com 8 unidades'
-                                    price = 'R$:17,90'
-                                />
-                                <ProductBox
-                                    id="2" 
-                                    image = '/images/sushi.webp'
-                                    name = 'Takoyaki'
-                                    description = 'Composto por: polvo, cebolinha, gengibre, alga, molho de soja.'
-                                    amount = 'Porção com 8 unidades'
-                                    price = 'R$:17,90'
-                                />
+                                    {user?.favorites === null ? 'Você não tem favoritos' : 'temos favoritos'}
                                 </div>
                             </div>}
 
@@ -142,12 +131,12 @@ export default function Profile() {
                                     </p>
                                 </div>
                             </div>}
-                            <UpdateProfileModal userId={user.data._id} isOpen={isNewProfileModalOpen} onRequestClose={handleCloseProfileModal} />   
+                            <UpdateProfileModal userId={user?.id} isOpen={isNewProfileModalOpen} onRequestClose={handleCloseProfileModal} />   
                         </div>
                         }
                     </div>
-                ))}
-            </div> */}
+            </div>
+            }
         </>
     )
 }
