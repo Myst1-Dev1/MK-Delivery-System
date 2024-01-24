@@ -12,6 +12,8 @@ export default function Profile() {
     const { user } = useContext(UserContext);
     const { isAuthenticated } = useContext(AuthContext);
 
+    console.log(user);
+
     const [profile, setProfile] = useState(true);
     const [favorites, setFavorites] = useState(false);
     const [conversations, setConversations] = useState(false);

@@ -20,44 +20,42 @@ interface ProductBoxProps {
 
 export function ProductBox({ image, name, description, amount, price, id }:ProductBoxProps) {
     const { user } = useContext(UserContext);
-    const { DeleteProduct } = useContext(ProductContext);
-
-    const [favorites, setFavorites] = useState<[] | any>([]);
+    const {products ,DeleteProduct } = useContext(ProductContext);
 
     const userId = user?.id;
     const {'mk-delivery.token': token} = parseCookies();
 
-    async function handleCreateFavorites() {
+    const favoritesArray = JSON.parse(user?.favorites || '[]');
+    const isIdOnFavorites = favoritesArray?.map((favorite:any) => favorite.id)
+    console.log(isIdOnFavorites);
+
+    const data = products?.data;
+
+    async function handleCreateFavorites(id:string) {
       try {
-          // Verifica se o produto já está nos favoritos
-          const isProductInFavorites = favorites.includes(id);
-  
-          // Cria uma nova lista de favoritos com base na verificação acima
-          const updatedFavorites = isProductInFavorites
-              ? favorites.filter((favId:any) => favId !== id)
-              : [...favorites, id];
-  
-          // Atualiza o estado local dos favoritos
-          setFavorites(updatedFavorites);
-  
-          // Atualiza os favoritos no Laravel usando método PUT
-          await api.put(`users/${userId}`, {
-              favorites: JSON.stringify(updatedFavorites),
-          }, {
-            headers: {
-                'Accept': 'application/json',
-                "Content-Type": 'multipart/form-data',
-                Authorization: `Bearer ${token}`
-            }
-          });
-  
-          console.log('Favoritos atualizados:', updatedFavorites);
-      } catch (error) {
-          console.error('Erro ao atualizar favoritos:', error);
-      }
+        const isProductInFavorites = data.includes(products.id);
+
+        const filterProduct = data?.filter((product:any) => product.id === id)
+
+        const updatedFavorites = isProductInFavorites
+            ? data.filter((favId:any) => favId !== filterProduct)
+            : [...filterProduct];
+
+        await api.put(`users/${userId}`, {
+            favorites: JSON.stringify(updatedFavorites),
+        }, {
+          headers: {
+              'Accept': 'application/json',
+              Authorization: `Bearer ${token}`
+          }
+        });
+
+        console.log('Favoritos atualizados:', id, updatedFavorites);
+    } catch (error) {
+        console.error('Erro ao atualizar favoritos:', error);
+    }
   }
   
-
     const mutation:any = useMutation({
       mutationFn:DeleteProduct,
       onSuccess: () => {
@@ -92,8 +90,15 @@ export function ProductBox({ image, name, description, amount, price, id }:Produ
               </button>
             </div>
           </div>
-          <div className='absolute top-2 right-2 flex justify-center align-center text-gray-400 bg-white w-10 h-10 rounded-full cursor-pointer hover:bg-red-600 hover:text-white transition-color'>
-            <FaHeart onClick={handleCreateFavorites} className="m-auto transition-colors" />
+          <div
+              onClick={() => handleCreateFavorites(id)}
+              className={`${
+                  isIdOnFavorites.includes(id)
+                      ? 'absolute top-2 right-2 flex justify-center align-center w-10 h-10 rounded-full cursor-pointer bg-red-600 text-white'
+                      : 'absolute top-2 right-2 flex justify-center align-center text-gray-400 bg-white w-10 h-10 rounded-full cursor-pointer hover:bg-red-600 hover:text-white transition-color'
+              }`}
+          >
+              <FaHeart className="m-auto transition-colors" />
           </div>
         </div>
     )

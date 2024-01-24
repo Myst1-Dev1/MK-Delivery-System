@@ -20,19 +20,23 @@ export function UpdateProfileModal({ isOpen , onRequestClose, userId}: UpdatePro
     const [image, setImage] = useState<null | any>(null);
 
     async function updateUserData(data:any) {
+        console.log(data.avatar.name);
         try {
             const {'mk-delivery.token': token} = parseCookies();
             const formData = new FormData();
 
-            formData.append('avatar', data.avatar);
             formData.append('name', data.name);
             formData.append('email', data.email);
             formData.append('password', data.password);
-            formData.append('current_password', data.current_password);
+            //formData.append('current_password', data.current_password);
             formData.append('password_confirmation', data.password_confirmation);
             formData.append('tel', data.tel);
+            formData.append('_method', 'PUT');
 
-            const res = await api.put(`users/${userId}`, formData, {
+            if(data.avatar.name) formData.append('avatar', data.avatar);
+            if(data.current_password) formData.append('current_password', data.current_password);
+
+            const res = await api.post(`users/${userId}`, formData, {
                 headers: {
                     'Accept': 'application/json',
                     "Content-Type": 'multipart/form-data',
@@ -40,8 +44,13 @@ export function UpdateProfileModal({ isOpen , onRequestClose, userId}: UpdatePro
                 },
             });
 
-            console.log('Dados de usuário atualizados com sucesso', res.data);
+            if(res.status === 200) {
+                console.log('Dados de usuário atualizados com sucesso', res.data);
+            } else {
+                console.log('Tivemos um erro AO ATUALIZAR O USUÁRIO', res.data);
+            }
             reset();
+            setImage(null);
         } catch (error) {
             console.error('Erro ao atualizar dados do usuário:', error);
         }
@@ -73,6 +82,7 @@ export function UpdateProfileModal({ isOpen , onRequestClose, userId}: UpdatePro
                                 onChange={(e) => {
                                     const file:any = e.target.files?.[0];
                                     setValue('avatar', file);
+                                    console.log('aaaaa',file);
                                     setImage(URL.createObjectURL(file))
                                 }} className="hidden" type="file" id="avatar" />
                             <label className="cursor-pointer flex gap-5 items-center" htmlFor="avatar"><FaUpload /> <span>Enviar imagem</span></label>
