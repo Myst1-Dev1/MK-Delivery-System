@@ -1,7 +1,6 @@
 'use client'
 
 import Link from "next/link";
-import Image from "next/image";
 
 import { useContext, useEffect } from 'react';
 import { NavBar } from "../NavBar";
@@ -15,7 +14,7 @@ import { useRouter } from "next/navigation";
 
 export function Header() {
     const { isAuthenticated } = useContext(AuthContext);
-    const { user } = useContext(UserContext);
+    const { user, isLoading } = useContext(UserContext);
 
     const router = useRouter();
 
@@ -36,14 +35,16 @@ export function Header() {
         <>
             <div className="container m-auto flex mt-3 justify-between items-center sm: px-3">
                 <img className="object-cover lg:w-52 sm: w-28" src="/images/logo.webp" alt="imagem da logo" />
-                {isAuthenticated ? 
+                {isAuthenticated && isClient ? 
                     <div>
+                        {isLoading ? 'carregando...' :
                         <div key={user?.id} className="flex gap-5 items-center">
                         <FaShoppingCart onClick={() => setCart(true)} className="fill-none stroke-2 stroke-black text-2xl cursor-pointer hover:fill-red-500 hover:stroke-none transition-colors" />
                         <FaBell className="fill-none stroke-2 stroke-black text-2xl cursor-pointer hover:fill-red-500 hover:stroke-none transition-colors" />
                         <img className="rounded-full object-cover w-[50px] h-[50px]" src={`https://api.digitallabor.com.br/${user?.avatar}`} width={50} height={50} alt="foto do usuário"/>
                         <FaSignOutAlt onClick={handleLogout} className="fill-none stroke-2 stroke-black text-2xl cursor-pointer hover:fill-red-500 hover:stroke-none transition-colors" />
                         </div>
+                        }
                     </div>
                 :
                 <div>

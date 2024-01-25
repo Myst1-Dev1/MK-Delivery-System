@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 
 export default function SignInPage() {
     const { signIn, isError } = useContext(AuthContext);
-    const { register, handleSubmit, formState:{errors} } = useForm();
+    const { register, handleSubmit } = useForm();
 
     const router = useRouter();
 

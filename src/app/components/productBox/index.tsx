@@ -1,7 +1,7 @@
 'use client';
 
 import { UserContext } from "../../../app/services/hooks/useUser/useUser";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { FaHeart, FaShoppingCart, FaTrashAlt } from "react-icons/fa";
 import { ProductContext } from "../../../app/services/hooks/useProducts/useProducts";
 import { useMutation } from "@tanstack/react-query";
@@ -27,19 +27,24 @@ export function ProductBox({ image, name, description, amount, price, id }:Produ
 
     const favoritesArray = JSON.parse(user?.favorites || '[]');
     const isIdOnFavorites = favoritesArray?.map((favorite:any) => favorite.id)
-    console.log(isIdOnFavorites);
 
     const data = products?.data;
 
     async function handleCreateFavorites(id:string) {
       try {
-        const isProductInFavorites = data.includes(products.id);
+        const isProductInFavorites = isIdOnFavorites.includes(id);
 
-        const filterProduct = data?.filter((product:any) => product.id === id)
+        if (isProductInFavorites) {
+          return alert('Este produto já está favoritado');
+        }
 
-        const updatedFavorites = isProductInFavorites
-            ? data.filter((favId:any) => favId !== filterProduct)
-            : [...filterProduct];
+        // Encontra o produto correspondente ao ID
+        const newProduct = data?.find((product:any) => product.id === id);
+
+        // Adiciona o novo produto aos favoritos
+        const updatedFavorites = newProduct
+          ? [...favoritesArray, newProduct]
+          : data;
 
         await api.put(`users/${userId}`, {
             favorites: JSON.stringify(updatedFavorites),
@@ -50,22 +55,34 @@ export function ProductBox({ image, name, description, amount, price, id }:Produ
           }
         });
 
-        console.log('Favoritos atualizados:', id, updatedFavorites);
+        console.log('Favoritos atualizados:', updatedFavorites);
     } catch (error) {
         console.error('Erro ao atualizar favoritos:', error);
     }
   }
+
+    const createFavoriteMutation:any = useMutation({
+      mutationFn:handleCreateFavorites,
+      onSuccess: () => {
+        // Invalidate and refetch
+        queryClient.invalidateQueries({queryKey: ['user']})
+        }
+  });
   
-    const mutation:any = useMutation({
+    const deleteProductMutation:any = useMutation({
       mutationFn:DeleteProduct,
       onSuccess: () => {
           // Invalidate and refetch
           queryClient.invalidateQueries({queryKey: ['products']})
           }
-      });
+  });
 
     function handleDeleteProduct(id:string) {
-      mutation.mutate(id);
+      deleteProductMutation.mutate(id);
+    }
+
+    function handleAddProductToFavorites(id:string) {
+      createFavoriteMutation.mutate(id);
     }
 
     return (
@@ -91,7 +108,7 @@ export function ProductBox({ image, name, description, amount, price, id }:Produ
             </div>
           </div>
           <div
-              onClick={() => handleCreateFavorites(id)}
+              onClick={() => handleAddProductToFavorites(id)}
               className={`${
                   isIdOnFavorites.includes(id)
                       ? 'absolute top-2 right-2 flex justify-center align-center w-10 h-10 rounded-full cursor-pointer bg-red-600 text-white'

@@ -13,7 +13,7 @@ export function ActiveLink({children, href, ...rest}:ActiveLinkProps) {
 
     return (
         <>
-            <Link href={href} {...rest} className={`${isActive ? 'lg:text-xl sm:text-xs text-red-500' : 'lg:text-xl sm:text-xs hover:text-red-500 transition-colors'}`}>{children}</Link>
+            <Link href={href} {...rest} className={`${isActive ? 'md:text-xl lg:text-xl sm:text-xl text-red-500' : 'md:text-xl lg:text-xl sm:text-xl hover:text-red-500 transition-colors'}`}>{children}</Link>
         </>
     )
 }

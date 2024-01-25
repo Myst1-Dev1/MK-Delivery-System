@@ -3,16 +3,18 @@
 import Image from "next/image";
 
 import { useState, useContext } from "react";
-import { FaHeart, FaPencilAlt, FaRocketchat, FaSearch, FaUser } from "react-icons/fa";
+import { FaHeart, FaPencilAlt, FaRocketchat, FaUser } from "react-icons/fa";
 import { UserContext } from "../services/hooks/useUser/useUser";
 import { UpdateProfileModal } from "../components/UpdateProfileModal";
 import { AuthContext } from "../services/hooks/auth/auth";
+import { ProductBox } from "../components/productBox";
+import { formatPrice } from "../utils/formatPrice";
 
 export default function Profile() {
     const { user } = useContext(UserContext);
     const { isAuthenticated } = useContext(AuthContext);
 
-    console.log(user);
+    const favoritesArray = JSON.parse(user?.favorites || '[]');
 
     const [profile, setProfile] = useState(true);
     const [favorites, setFavorites] = useState(false);
@@ -56,12 +58,10 @@ export default function Profile() {
         setIsNewProfileModalOpen(false);
     }
 
-    console.log(user);
-
     return (
         <>
         {isAuthenticated === false ? <span className="container m-auto mt-10 text-center">Você precisa estár logado</span> :
-            <div className="container m-auto py-10 mb-10">
+            <div className="container m-auto py-10 mb-20">
                     <div key={user?._id} className="mt-10 container m-auto flex flex-wrap gap-10 lg:justify-start sm: justify-center">
                         <div className="border border-gray-300 h-[280px] rounded-lg divide-y divide-gray-300 lg:w-60 sm: w-[350px]">
                             <div className="flex items-center gap-3 p-3">
@@ -100,12 +100,22 @@ export default function Profile() {
                             </div>}
 
                             {favorites &&<div>
-                                <div className='bg-white flex gap-2 items-center border border-gray-400 rounded-lg p-2 h-14 lg:w-60 sm: w-full'>
+                                {/* <div className='bg-white flex gap-2 items-center border border-gray-400 rounded-lg p-2 h-14 lg:w-60 sm: w-full'>
                                     <FaSearch className="text-gray-400" />
                                     <input className='outline-none w-40' type="text" placeholder='Pesquisar...' />
-                                </div>
-                                <div className="mt-10 grid gap-10 lg:grid-cols-2 sm: grid-cols-1">
-                                    {user?.favorites === null ? 'Você não tem favoritos' : 'temos favoritos'}
+                                </div> */}
+                                <div className="grid gap-10 xl:grid-cols-3 lg:grid-cols-2 sm: grid-cols-1">
+                                    {favoritesArray.length === 0 ? 'Você não tem favoritos' : favoritesArray?.map((favorite:any) => (
+                                        <ProductBox 
+                                            key={favorite.id}
+                                            id={favorite.id}
+                                            image = {`https://api.digitallabor.com.br/${favorite.image}`}
+                                            name = {favorite.name}
+                                            description = {favorite.details}
+                                            amount = {favorite.amount}
+                                            price = {formatPrice(favorite.price)}
+                                        />
+                                    ))}
                                 </div>
                             </div>}
 
