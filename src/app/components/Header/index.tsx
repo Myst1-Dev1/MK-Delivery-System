@@ -4,7 +4,7 @@ import Link from "next/link";
 
 import { useContext, useEffect } from 'react';
 import { NavBar } from "../NavBar";
-import { Cart } from "../cart";
+import { Cart } from "../Cart";
 import { useState } from "react";
 import { AuthContext } from "../../../app/services/hooks/auth/auth";
 import { UserContext } from "../../../app/services/hooks/useUser/useUser";

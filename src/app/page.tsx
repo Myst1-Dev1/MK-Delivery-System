@@ -16,14 +16,14 @@ export default function Home() {
   const [search, setSearch] = useState('');
   const [selectedType, setSelectedType] = useState('Todos');
 
-  const [isCreateProductModalOpen, setIsCreateProductModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  function handleOpenCreateProductModal() {
-    setIsCreateProductModalOpen(true);
+  function handleOpenProductModal() {
+    setIsModalOpen(true);
   }
 
-  function handleCloseCreateProductModal() {
-    setIsCreateProductModalOpen(false);
+  function handleCloseProductModal() {
+    setIsModalOpen(false);
   }
 
   function searchProducts() {
@@ -80,7 +80,7 @@ export default function Home() {
         </div>
 
         {user?.user_adm === 1 ? 
-          <button onClick={handleOpenCreateProductModal} className="rounded-lg bg-red-500 text-white p-3 h-14 hover:bg-red-600 transition-colors lg:w-[250px] sm: w-full">Criar novo Produto</button> 
+          <button onClick={handleOpenProductModal} className="rounded-lg bg-red-500 text-white p-3 h-14 hover:bg-red-600 transition-colors lg:w-[250px] sm: w-full">Criar novo Produto</button> 
         : ''}
      
       </div>
@@ -96,7 +96,7 @@ export default function Home() {
                 name = {product.name}
                 description = {product.details}
                 amount = {product.amount}
-                price = {formatPrice(product.price)}
+                price = {formatPrice(product.price)} 
               />
             </div>
           )) : filter.map((product:any) => (
@@ -111,9 +111,9 @@ export default function Home() {
               />
             </div>
           )) : 'sem produtos' }
-        <CreateProductModal isOpen={isCreateProductModalOpen} onRequestClose={handleCloseCreateProductModal} /> 
+        <CreateProductModal isOpen={isModalOpen} onRequestClose={handleCloseProductModal} />
+         
       </div>
-      
       <Pagination />
     </div>
   )

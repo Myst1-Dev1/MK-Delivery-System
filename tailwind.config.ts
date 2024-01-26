@@ -13,7 +13,7 @@ const config: Config = {
         contactBg:'url(/images/contactImage.webp)',
       },
       backgroundColor: {
-        overlay:'rgba(0,0,0,0.6)',
+        overlay:'rgba(0,0,0,0.4)',
         chatBg:'#EEEEEE'
       },
       strokeWidth: {

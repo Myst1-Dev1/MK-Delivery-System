@@ -2,7 +2,7 @@
 
 import { UserContext } from "../../services/hooks/useUser/useUser";
 import { useContext, useState } from "react";
-import { FaHeart, FaTrashAlt } from "react-icons/fa";
+import { FaHeart, FaPencilAlt, FaTrashAlt } from "react-icons/fa";
 import { ProductContext } from "../../services/hooks/useProducts/useProducts";
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "../../services/queryClient";
@@ -10,6 +10,7 @@ import { api } from "../../services/axios";
 import { parseCookies } from "nookies";
 import { ProductModal } from "../ProductModal";
 import { AuthContext } from "../../../app/services/hooks/auth/auth";
+import { UpdateProductModal } from "../UpdateProductModal";
 
 interface ProductBoxProps {
     id:string;
@@ -26,6 +27,7 @@ export function ProductBox({ image, name, description, amount, price, id }:Produ
     const {products , DeleteProduct } = useContext(ProductContext);
 
     const [isProductModalOpen, setIsProductModalOpen] = useState(false);
+    const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
 
     const userId = user?.id;
     const {'mk-delivery.token': token} = parseCookies();
@@ -94,7 +96,10 @@ export function ProductBox({ image, name, description, amount, price, id }:Produ
         <div className='cursor-pointer relative lg:mb-0 sm: mb-10'>
           
             {user?.user_adm === 1 ? 
-              <div className="top-[-20px] absolute"><FaTrashAlt onClick={() => handleDeleteProduct(id)} className="text-red-500 cursor-pointer" /></div>
+              <div className="flex gap-3 top-[-20px] absolute">
+                <FaTrashAlt onClick={() => handleDeleteProduct(id)} className="text-red-500 cursor-pointer" />
+                <FaPencilAlt onClick={() => setIsUpdateModalOpen(true)} className="text-green-500 cursor-pointer" />
+              </div>
             : ''}
           <div onClick={() => setIsProductModalOpen(true)}>
             <img className='rounded-lg h-[200px] object-cover lg:w-[300px] sm: w-[350px]' src={image} width={300} height={200} alt='imagem do produto' />
@@ -119,6 +124,7 @@ export function ProductBox({ image, name, description, amount, price, id }:Produ
           </div>
         </div>
         {isProductModalOpen && <ProductModal onSetIsProductModalOpen = {setIsProductModalOpen} id = {id} />}
+        <UpdateProductModal productId={id} isOpen={isUpdateModalOpen} onRequestClose={setIsUpdateModalOpen} />
       </>
     )
 }

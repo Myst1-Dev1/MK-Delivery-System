@@ -14,6 +14,8 @@ export default function Profile() {
     const { user } = useContext(UserContext);
     const { isAuthenticated } = useContext(AuthContext);
 
+    console.log(user);
+
     const favoritesArray = JSON.parse(user?.favorites || '[]');
 
     const [profile, setProfile] = useState(true);

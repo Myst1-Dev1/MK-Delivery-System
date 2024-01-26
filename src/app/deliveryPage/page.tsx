@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import { FaRocketchat } from "react-icons/fa"
-import { Chat } from "../components/chat"
+import { Chat } from "../components/Chat"
 import { useState } from "react"
 
 export default function DeliveryPage() {
