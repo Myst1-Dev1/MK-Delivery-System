@@ -1,7 +1,7 @@
 'use client'
 
 import { FaSearch } from 'react-icons/fa'
-import { ProductBox } from './components/productBox'
+import { ProductBox } from './components/ProductBox'
 import { useContext, useEffect, useState } from 'react'
 import { ProductContext } from './services/hooks/useProducts/useProducts'
 import { formatPrice } from './utils/formatPrice'

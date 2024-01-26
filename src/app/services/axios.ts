@@ -23,3 +23,14 @@ export async function getProductsData(pageNumber = 1) {
         console.log(error);
     }
 }
+
+export async function getProductById(id:string) {
+    try {
+        const { data, status } = await api.get(`products/${id}`);
+
+        if(status === 200) return data;
+
+    } catch (error) {
+        console.log(error);
+    }
+}

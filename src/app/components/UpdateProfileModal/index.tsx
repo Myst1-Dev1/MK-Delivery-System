@@ -28,7 +28,6 @@ export function UpdateProfileModal({ isOpen , onRequestClose, userId}: UpdatePro
             formData.append('name', data.name);
             formData.append('email', data.email);
             formData.append('password', data.password);
-            //formData.append('current_password', data.current_password);
             formData.append('password_confirmation', data.password_confirmation);
             formData.append('tel', data.tel);
             formData.append('_method', 'PUT');

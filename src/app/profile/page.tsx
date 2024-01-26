@@ -7,7 +7,7 @@ import { FaHeart, FaPencilAlt, FaRocketchat, FaUser } from "react-icons/fa";
 import { UserContext } from "../services/hooks/useUser/useUser";
 import { UpdateProfileModal } from "../components/UpdateProfileModal";
 import { AuthContext } from "../services/hooks/auth/auth";
-import { ProductBox } from "../components/productBox";
+import { ProductBox } from "../components/ProductBox";
 import { formatPrice } from "../utils/formatPrice";
 
 export default function Profile() {
